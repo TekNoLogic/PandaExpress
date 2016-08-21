@@ -43,8 +43,9 @@ for i=2,NUM_BUTTONS do
 end
 
 
-local recipe_ids
+local recipe_ids, dirty
 local offset = 0
+ns.panel:SetScript("OnShow", function() dirty = true end)
 local function Refresh()
   recipe_ids = C_TradeSkillUI.GetFilteredRecipeIDs()
   for i,butt in pairs(buttons) do
@@ -52,7 +53,10 @@ local function Refresh()
   end
 end
 hooksecurefunc(TradeSkillFrame.RecipeList, "RebuildDataList", function()
-  offset = 0
+  if dirty then
+    offset = 0
+    dirty = false
+  end
   Refresh()
 end)
 hooksecurefunc(TradeSkillFrame.DetailsFrame, "RefreshDisplay", function()
