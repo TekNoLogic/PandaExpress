@@ -5,6 +5,12 @@ local myname, ns = ...
 local UNKNOWN = GRAY_FONT_COLOR_CODE.. "???"
 
 
+local function ColorNum(num)
+  local color = (num > 0) and HIGHLIGHT_FONT_COLOR_CODE or GRAY_FONT_COLOR_CODE
+  return color.. num.. "|r"
+end
+
+
 local function SetRecipe(self, recipe_id)
   self.recipe_id = recipe_id
 
@@ -21,11 +27,17 @@ local function SetRecipe(self, recipe_id)
 
   local link = C_TradeSkillUI.GetRecipeItemLink(recipe_id)
   if recipe.learned then
-    self.craftable:SetText("Can craft: ".. recipe.numAvailable)
+    local cooldown, _, num, max = C_TradeSkillUI.GetRecipeCooldown(recipe_id)
+
+    if cooldown or (max > 0 and num == 0) then
+      self.craftable:SetText(RED_FONT_COLOR_CODE.. "On cooldown")
+    else
+      self.craftable:SetText("Can craft: ".. ColorNum(recipe.numAvailable))
+    end
 
     if link then
       local stock = GetItemCount(link, true)
-      self.stock:SetText("In stock: ".. stock)
+      self.stock:SetText("In stock: ".. ColorNum(stock))
     else
       self.stock:SetText()
     end
@@ -92,10 +104,10 @@ function ns.NewCraftButton(parent)
   butt.name:SetJustifyH("LEFT")
   butt.name:SetWordWrap(false)
 
-  butt.craftable = butt:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+  butt.craftable = butt:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
   butt.craftable:SetPoint("TOPLEFT", butt.name, "BOTTOMLEFT", 0, -4)
 
-  butt.stock = butt:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+  butt.stock = butt:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
   butt.stock:SetPoint("TOPLEFT", butt.craftable, "BOTTOMLEFT", 0, -4)
 
   butt.costlabel = butt:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
