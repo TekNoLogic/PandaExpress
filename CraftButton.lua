@@ -51,6 +51,9 @@ function ns.NewCraftButton(parent)
 
   butt.name = butt:CreateFontString(nil, "ARTWORK", "GameFontNormal")
   butt.name:SetPoint("TOPLEFT", butt.icon, "TOPRIGHT", 5, 0)
+  butt.name:SetPoint("RIGHT", butt, -5, 0)
+  butt.name:SetJustifyH("LEFT")
+  butt.name:SetWordWrap(false)
 
   butt.craftable = butt:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
   butt.craftable:SetPoint("TOPLEFT", butt.name, "BOTTOMLEFT", 0, -4)
