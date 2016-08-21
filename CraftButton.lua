@@ -19,28 +19,32 @@ local function SetRecipe(self, recipe_id)
   self.icon:SetTexture(recipe.icon)
   self.name:SetText(recipe.name)
 
+  local link = C_TradeSkillUI.GetRecipeItemLink(recipe_id)
   if recipe.learned then
     self.craftable:SetText("Can craft: ".. recipe.numAvailable)
 
-    local cost, incomplete = GetReagentCost and GetReagentCost("recipe:"..recipe_id)
-    local reagent_price = cost and ns.GS(cost) or UNKNOWN
-    if incomplete then reagent_price = "~"..reagent_price end
-    self.cost:SetText(reagent_price)
-
-    local link = C_TradeSkillUI.GetRecipeItemLink(recipe_id)
     if link then
       local stock = GetItemCount(link, true)
       self.stock:SetText("In stock: ".. stock)
-
-      local ah = GetAuctionBuyout and GetAuctionBuyout(link)
-      local ah_price = ah and ns.GS(ah) or UNKNOWN
-      self.ah:SetText(ah_price)
     else
       self.stock:SetText()
     end
   else
     self.craftable:SetText()
     self.stock:SetText()
+  end
+
+  local cost, incomplete = GetReagentCost and GetReagentCost("recipe:"..recipe_id)
+  local reagent_price = cost and ns.GS(cost) or UNKNOWN
+  if incomplete then reagent_price = "~"..reagent_price end
+  self.cost:SetText(reagent_price)
+
+  if link then
+    local ah = GetAuctionBuyout and GetAuctionBuyout(link)
+    local ah_price = ah and ns.GS(ah) or UNKNOWN
+    self.ah:SetText(ah_price)
+  else
+    self.ah:SetText()
   end
 
   self:Show()
