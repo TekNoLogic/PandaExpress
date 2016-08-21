@@ -16,7 +16,6 @@ ns.panel = CreateFrame("Frame", nil, TradeSkillFrame)
 ns.panel:SetWidth(250)
 ns.panel:SetPoint("TOPLEFT", TradeSkillFrame, "TOPRIGHT", -8, -21)
 ns.panel:SetPoint("BOTTOM", 0, 21)
--- ns.panel:Hide()
 
 ns.panel:SetFrameLevel(TradeSkillFrame:GetFrameLevel()-1)
 
