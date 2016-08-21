@@ -50,14 +50,14 @@ end
 local function PreClick(self, button)
   if InCombatLockdown() then return end
 
-  if button == "LeftButton" then
+  if button == "LeftButton" and (self.recipe.numAvailable > 0) then
     macro = "/run C_TradeSkillUI.CraftRecipe(".. self.recipe_id.. ")"
     if self.is_enchant then macro = macro.. "\n/use item:38682" end
 
     self:SetAttribute("type", "macro")
     self:SetAttribute("macrotext", macro)
 
-  elseif button == "RightButton" then
+  elseif button == "RightButton" or (self.recipe.numAvailable == 0) then
     macro = "/run "..
       "TradeSkillFrame.RecipeList:SetSelectedRecipeID(".. self.recipe_id.. ") "..
       "TradeSkillFrame.RecipeList:ForceRecipeIntoView(".. self.recipe_id.. ")"
