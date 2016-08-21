@@ -7,7 +7,11 @@ local UNKNOWN = GRAY_FONT_COLOR_CODE.. "???"
 
 local function SetRecipe(self, recipe_id)
   self.recipe_id = recipe_id
-  if not recipe_id then return end
+
+  if not recipe_id then
+    self:Hide()
+    return
+  end
 
   local recipe = C_TradeSkillUI.GetRecipeInfo(recipe_id)
   self.recipe = recipe
@@ -38,6 +42,8 @@ local function SetRecipe(self, recipe_id)
     self.craftable:SetText()
     self.stock:SetText()
   end
+
+  self:Show()
 end
 
 
