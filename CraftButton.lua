@@ -41,8 +41,35 @@ local function SetRecipe(self, recipe_id)
 end
 
 
+local function PreClick(self, button)
+  if InCombatLockdown() then return end
+
+  if button == "LeftButton" then
+    macro = "/run C_TradeSkillUI.CraftRecipe(".. self.recipe_id.. ")"
+    if self.is_enchant then macro = macro.. "\n/use item:38682" end
+
+    self:SetAttribute("type", "macro")
+    self:SetAttribute("macrotext", macro)
+
+  elseif button == "RightButton" then
+    macro = "/run "..
+      "TradeSkillFrame.RecipeList:SetSelectedRecipeID(".. self.recipe_id.. ") "..
+      "TradeSkillFrame.RecipeList:ForceRecipeIntoView(".. self.recipe_id.. ")"
+    self:SetAttribute("type", "macro")
+    self:SetAttribute("macrotext", macro)
+  end
+end
+
+
+local function PostClick(self, button)
+  if InCombatLockdown() then return end
+  self:SetAttribute("type", nil)
+  self:SetAttribute("macrotext", nil)
+end
+
+
 function ns.NewCraftButton(parent)
-  local butt = CreateFrame("Frame", nil, parent)
+  local butt = CreateFrame("CheckButton", nil, parent, "SecureActionButtonTemplate")
   butt:SetHeight(48)
 
   butt.icon = butt:CreateTexture(nil, "ARTWORK")
@@ -78,6 +105,10 @@ function ns.NewCraftButton(parent)
   butt.ah:SetPoint("RIGHT", butt.cost)
 
   butt.SetRecipe = SetRecipe
+  butt:SetScript("PreClick", PreClick)
+  butt:SetScript("PostClick", PostClick)
+
+  butt:RegisterForClicks("AnyDown")
 
   return butt
 end
