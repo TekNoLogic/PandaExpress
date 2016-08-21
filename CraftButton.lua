@@ -5,6 +5,21 @@ local myname, ns = ...
 local UNKNOWN = GRAY_FONT_COLOR_CODE.. "???"
 
 
+local server = GetRealmName().." "..UnitFactionGroup("player")
+local function GetNumAuctions(link)
+  local id = ns.ids[link]
+  local count = 0
+
+  if id and ForSaleByOwnerDB then
+    for char,vals in pairs(ForSaleByOwnerDB[server]) do
+      count = count + (vals[id] or 0)
+    end
+  end
+
+  return count
+end
+
+
 local function ColorNum(num)
   local color = (num > 0) and HIGHLIGHT_FONT_COLOR_CODE or GRAY_FONT_COLOR_CODE
   return color.. num.. "|r"
@@ -36,7 +51,7 @@ local function SetRecipe(self, recipe_id)
     end
 
     if link then
-      local stock = GetItemCount(link, true)
+      local stock = GetItemCount(link, true) + GetNumAuctions(link)
       self.stock:SetText("In stock: ".. ColorNum(stock))
     else
       self.stock:SetText()

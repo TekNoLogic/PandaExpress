@@ -9,6 +9,7 @@
 ## LoadWith: Blizzard_TradeSkillUI
 
 externals\gsc.lua
+externals\itemid.lua
 externals\ui-minibutton.lua
 
 Button.lua
