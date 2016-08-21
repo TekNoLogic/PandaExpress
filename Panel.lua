@@ -26,9 +26,11 @@ ns.panel:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BA
 ns.panel:EnableMouse(true)
 
 
+local buttons = {}
 local butt = ns.NewCraftButton(ns.panel)
 butt:SetPoint("TOPLEFT", 10, -10)
 butt:SetPoint("RIGHT", -2, 0)
+buttons[1] = butt
 
 local anchor = butt
 for i=1,7 do
@@ -36,4 +38,19 @@ for i=1,7 do
   butt:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -7)
   butt:SetPoint("RIGHT", anchor)
   anchor = butt
+  buttons[i+1] = butt
 end
+
+
+local recipe_ids
+local function Refresh()
+  recipe_ids = C_TradeSkillUI.GetFilteredRecipeIDs()
+  for i,butt in pairs(buttons) do
+    butt:SetRecipe(recipe_ids[i])
+  end
+end
+hooksecurefunc(TradeSkillFrame.RecipeList, "RebuildDataList", Refresh)
+hooksecurefunc(TradeSkillFrame.DetailsFrame, "RefreshDisplay", function()
+  -- Tiny delay to allow tekReagentCost to scan all the recipes
+  C_Timer.After(.01, Refresh)
+end)

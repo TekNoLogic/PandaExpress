@@ -2,6 +2,45 @@
 local myname, ns = ...
 
 
+local UNKNOWN = GRAY_FONT_COLOR_CODE.. "???"
+
+
+local function SetRecipe(self, recipe_id)
+  self.recipe_id = recipe_id
+  if not recipe_id then return end
+
+  local recipe = C_TradeSkillUI.GetRecipeInfo(recipe_id)
+  self.recipe = recipe
+
+  self.icon:SetTexture(recipe.icon)
+  self.name:SetText(recipe.name)
+
+  if recipe.learned then
+    self.craftable:SetText("Can craft: ".. recipe.numAvailable)
+
+    local cost, incomplete = GetReagentCost and GetReagentCost("recipe:"..recipe_id)
+    local reagent_price = cost and ns.GS(cost) or UNKNOWN
+    if incomplete then reagent_price = "~"..reagent_price end
+    self.cost:SetText(reagent_price)
+
+    local link = C_TradeSkillUI.GetRecipeItemLink(recipe_id)
+    if link then
+      local stock = GetItemCount(link, true)
+      self.stock:SetText("In stock: ".. stock)
+
+      local ah = GetAuctionBuyout and GetAuctionBuyout(link)
+      local ah_price = ah and ns.GS(ah) or UNKNOWN
+      self.ah:SetText(ah_price)
+    else
+      self.stock:SetText()
+    end
+  else
+    self.craftable:SetText()
+    self.stock:SetText()
+  end
+end
+
+
 function ns.NewCraftButton(parent)
   local butt = CreateFrame("Frame", nil, parent)
   butt:SetHeight(48)
@@ -35,13 +74,7 @@ function ns.NewCraftButton(parent)
   butt.ah:SetPoint("TOP", butt.auctionlabel)
   butt.ah:SetPoint("RIGHT", butt.cost)
 
-  local name, link, quality, _, _, _, _, _, _, icon = GetItemInfo(117319)
-  butt.icon:SetTexture(icon)
-  butt.name:SetText(link)
-  butt.craftable:SetText("Can craft: 4")
-  butt.stock:SetText("In stock: 1")
-  butt.cost:SetText(ns.GS(123456))
-  butt.ah:SetText(ns.GS(1234567))
+  butt.SetRecipe = SetRecipe
 
   return butt
 end
