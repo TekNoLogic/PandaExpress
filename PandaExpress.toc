@@ -1,0 +1,16 @@
+## Interface: 70000
+
+## Title: PandaExpress
+## Author: Tekkub Stoutwrithe
+
+## OptionalDeps: tekDebug
+
+## LoadOnDemand: 1
+## LoadWith: Blizzard_TradeSkillUI
+
+externals\gsc.lua
+externals\ui-minibutton.lua
+
+Button.lua
+CraftButton.lua
+Panel.lua
