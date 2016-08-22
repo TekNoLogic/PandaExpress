@@ -41,6 +41,7 @@ local function SetRecipe(self, recipe_id)
   self.name:SetText(recipe.name)
 
   local link = C_TradeSkillUI.GetRecipeItemLink(recipe_id)
+  self.item.link = link
   if recipe.learned then
     local cooldown, _, num, max = C_TradeSkillUI.GetRecipeCooldown(recipe_id)
 
@@ -105,16 +106,27 @@ local function PostClick(self, button)
 end
 
 
+local function OnEnter(self)
+  GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT", 0, 48)
+  GameTooltip:SetHyperlink(self.link)
+end
+
+
 function ns.NewCraftButton(parent)
   local butt = CreateFrame("CheckButton", nil, parent, "SecureActionButtonTemplate")
   butt:SetHeight(48)
 
-  butt.icon = butt:CreateTexture(nil, "ARTWORK")
-  butt.icon:SetPoint("TOPLEFT")
-  butt.icon:SetSize(48, 48)
+  butt.item = CreateFrame("Frame", nil, butt)
+  butt.item:SetPoint("TOPLEFT")
+  butt.item:SetSize(48, 48)
+  butt.item:SetScript("OnEnter", OnEnter)
+  butt.item:SetScript("OnLeave", GameTooltip_Hide)
+
+  butt.icon = butt.item:CreateTexture(nil, "ARTWORK")
+  butt.icon:SetAllPoints()
 
   butt.name = butt:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-  butt.name:SetPoint("TOPLEFT", butt.icon, "TOPRIGHT", 5, 0)
+  butt.name:SetPoint("TOPLEFT", butt.item, "TOPRIGHT", 5, 0)
   butt.name:SetPoint("RIGHT", butt, -5, 0)
   butt.name:SetJustifyH("LEFT")
   butt.name:SetWordWrap(false)
