@@ -26,24 +26,22 @@ local function ColorNum(num)
 end
 
 
-local function SetRecipe(self, recipe_id)
-  self.recipe_id = recipe_id
-
-  if not recipe_id then
+local function SetRecipe(self, recipe)
+  if not recipe then
     self:Hide()
     return
   end
 
-  local recipe = C_TradeSkillUI.GetRecipeInfo(recipe_id)
+  self.recipe_id = recipe.recipeID
   self.recipe = recipe
 
   self.icon:SetTexture(recipe.icon)
   self.name:SetText(recipe.name)
 
-  local link = C_TradeSkillUI.GetRecipeItemLink(recipe_id)
+  local link = C_TradeSkillUI.GetRecipeItemLink(recipe.recipeID)
   self.item.link = link
   if recipe.learned then
-    local cooldown, _, num, max = C_TradeSkillUI.GetRecipeCooldown(recipe_id)
+    local cooldown, _, num, max = C_TradeSkillUI.GetRecipeCooldown(recipe.recipeID)
 
     if cooldown or (max > 0 and num == 0) then
       self.craftable:SetText(RED_FONT_COLOR_CODE.. "On cooldown")
@@ -62,7 +60,7 @@ local function SetRecipe(self, recipe_id)
     self.stock:SetText()
   end
 
-  local cost, incomplete = GetReagentCost and GetReagentCost("recipe:"..recipe_id)
+  local cost, incomplete = GetReagentCost and GetReagentCost("recipe:"..recipe.recipeID)
   local reagent_price = cost and ns.GS(cost) or UNKNOWN
   if incomplete then reagent_price = "~"..reagent_price end
   self.cost:SetText(reagent_price)

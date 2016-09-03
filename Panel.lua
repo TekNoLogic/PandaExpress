@@ -43,16 +43,13 @@ for i=2,NUM_BUTTONS do
 end
 
 
-local recipe_ids = {}
+local recipes = {}
 local function RebuildList()
-  wipe(recipe_ids)
-  local ids = C_TradeSkillUI.GetFilteredRecipeIDs()
-  if C_TradeSkillUI.GetOnlyShowUnlearnedRecipes() then recipe_ids = ids end
+  wipe(recipes)
 
-  for i,recipe_id in ipairs(ids) do
-    local recipe = C_TradeSkillUI.GetRecipeInfo(recipe_id)
-    if recipe.learned then
-      table.insert(recipe_ids, recipe_id)
+  for i,recipe in ipairs(TradeSkillFrame.RecipeList.dataList) do
+    if recipe.recipeID then
+      table.insert(recipes, recipe)
     end
   end
 end
@@ -63,29 +60,17 @@ local offset = 0
 ns.panel:SetScript("OnShow", function() dirty = true end)
 local function Refresh()
   for i,butt in pairs(buttons) do
-    butt:SetRecipe(recipe_ids[i+offset])
+    butt:SetRecipe(recipes[i+offset])
   end
 end
-
-
-hooksecurefunc(TradeSkillFrame.RecipeList, "OnLearnedTabClicked", function()
-  RebuildList()
-  Refresh()
-end)
-
-
-hooksecurefunc(TradeSkillFrame.RecipeList, "OnUnlearnedTabClicked", function()
-  RebuildList()
-  Refresh()
-end)
 
 
 hooksecurefunc(TradeSkillFrame.RecipeList, "RebuildDataList", function()
   if dirty then
     offset = 0
     dirty = false
-    RebuildList()
   end
+  RebuildList()
   Refresh()
 end)
 
@@ -98,7 +83,7 @@ end)
 
 ns.panel:EnableMouseWheel(true)
 ns.panel:SetScript("OnMouseWheel", function(self, value)
-  local max = #recipe_ids - NUM_BUTTONS
+  local max = #recipes - NUM_BUTTONS
   offset = offset - value * NUM_BUTTONS / 2
   if offset > max then offset = max end
   if offset < 0 then offset = 0 end
