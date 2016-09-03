@@ -43,22 +43,53 @@ for i=2,NUM_BUTTONS do
 end
 
 
-local recipe_ids, dirty
+local recipe_ids = {}
+local function RebuildList()
+  wipe(recipe_ids)
+  local ids = C_TradeSkillUI.GetFilteredRecipeIDs()
+  if C_TradeSkillUI.GetOnlyShowUnlearnedRecipes() then recipe_ids = ids end
+
+  for i,recipe_id in ipairs(ids) do
+    local recipe = C_TradeSkillUI.GetRecipeInfo(recipe_id)
+    if recipe.learned then
+      table.insert(recipe_ids, recipe_id)
+    end
+  end
+end
+
+
+local dirty
 local offset = 0
 ns.panel:SetScript("OnShow", function() dirty = true end)
 local function Refresh()
-  recipe_ids = C_TradeSkillUI.GetFilteredRecipeIDs()
   for i,butt in pairs(buttons) do
     butt:SetRecipe(recipe_ids[i+offset])
   end
 end
+
+
+hooksecurefunc(TradeSkillFrame.RecipeList, "OnLearnedTabClicked", function()
+  RebuildList()
+  Refresh()
+end)
+
+
+hooksecurefunc(TradeSkillFrame.RecipeList, "OnUnlearnedTabClicked", function()
+  RebuildList()
+  Refresh()
+end)
+
+
 hooksecurefunc(TradeSkillFrame.RecipeList, "RebuildDataList", function()
   if dirty then
     offset = 0
     dirty = false
+    RebuildList()
   end
   Refresh()
 end)
+
+
 hooksecurefunc(TradeSkillFrame.DetailsFrame, "RefreshDisplay", function()
   -- Tiny delay to allow tekReagentCost to scan all the recipes
   C_Timer.After(.01, Refresh)
