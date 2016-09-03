@@ -43,7 +43,7 @@ local function SetRecipe(self, recipe)
   if recipe.learned then
     local cooldown, _, num, max = C_TradeSkillUI.GetRecipeCooldown(recipe.recipeID)
 
-    if cooldown or (max > 0 and num == 0) then
+    if cooldown or ((max or 0) > 0 and num == 0) then
       self.craftable:SetText(RED_FONT_COLOR_CODE.. "On cooldown")
     else
       self.craftable:SetText("Can craft: ".. ColorNum(recipe.numAvailable))
