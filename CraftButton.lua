@@ -63,6 +63,10 @@ local function SetRecipe(self, recipe)
   local cost, incomplete = GetReagentCost and GetReagentCost("recipe:"..recipe.recipeID)
   local reagent_price = cost and ns.GS(cost) or UNKNOWN
   if incomplete then reagent_price = "~"..reagent_price end
+  local id = link and ns.ids[link]
+  if cost and id and HasBoundReagents and HasBoundReagents(id) then
+    reagent_price = "BoP + "..reagent_price
+  end
   self.cost:SetText(reagent_price)
 
   if link then
