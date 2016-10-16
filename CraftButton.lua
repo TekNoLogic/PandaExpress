@@ -65,7 +65,7 @@ local function SetRecipe(self, recipe)
   if incomplete then reagent_price = "~"..reagent_price end
   local id = link and ns.ids[link]
   if cost and id and HasBoundReagents and HasBoundReagents(id) then
-    reagent_price = "BoP + "..reagent_price
+    reagent_price = BATTLENET_FONT_COLOR_CODE.."BoP|r "..reagent_price
   end
   self.cost:SetText(reagent_price)
 
