@@ -26,6 +26,21 @@ local function ColorNum(num)
 end
 
 
+local function CreatesScroll(recipe_id)
+  return not not ns.vellums[recipe_id]
+end
+
+
+local function GetResultItemLink(recipe_id)
+  if CreatesScroll(recipe_id) then
+    local _, link = GetItemInfo(ns.vellums[recipe_id])
+    return link
+  end
+
+  return C_TradeSkillUI.GetRecipeItemLink(recipe_id)
+end
+
+
 local function SetRecipe(self, recipe)
   if not recipe then
     self:Hide()
@@ -35,10 +50,16 @@ local function SetRecipe(self, recipe)
   self.recipe_id = recipe.recipeID
   self.recipe = recipe
 
-  self.icon:SetTexture(recipe.icon)
   self.name:SetText(recipe.name)
+  self.icon:SetTexture(recipe.icon)
 
-  local link = C_TradeSkillUI.GetRecipeItemLink(recipe.recipeID)
+  local link = GetResultItemLink(recipe.recipeID)
+  if link and CreatesScroll(recipe.recipeID) then
+    local name, _, _, _, _, _, _, _, _, texture = GetItemInfo(link)
+    self.name:SetText(name:gsub("^Enchant ", ""))
+    self.icon:SetTexture(texture)
+  end
+
   self.item.link = link
   if recipe.learned then
     local cooldown, _, num, max = C_TradeSkillUI.GetRecipeCooldown(recipe.recipeID)

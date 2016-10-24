@@ -10,6 +10,9 @@
 
 externals\gsc.lua
 externals\itemid.lua
+externals\memoizing_table.lua
+
+data\vellums.lua
 
 Button.lua
 CraftButton.lua
