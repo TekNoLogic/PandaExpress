@@ -44,7 +44,7 @@ local function SetRecipe(self, recipe)
   self.icon:SetTexture(recipe.icon)
 
   local link = ns.GetResultItemLink(recipe_id)
-  if link and ns.CreatesScroll(recipe_id) then
+  if link and ns.CanUseVellum(recipe_id) then
     local name, _, _, _, _, _, _, _, _, texture = GetItemInfo(link)
     self.name:SetText(name:gsub("^Enchant ", ""))
     self.icon:SetTexture(texture)
@@ -117,7 +117,7 @@ local function OnEnter(self)
 end
 
 
-function ns.NewCraftButton(parent)
+function ns.CreateCraftButton(parent)
   local butt = CreateFrame("CheckButton", nil, parent, "SecureActionButtonTemplate")
   butt:SetHeight(48)
 

@@ -28,14 +28,14 @@ ns.panel:EnableMouse(true)
 
 local NUM_BUTTONS = 8
 local buttons = {}
-local butt = ns.NewCraftButton(ns.panel)
+local butt = ns.CreateCraftButton(ns.panel)
 butt:SetPoint("TOPLEFT", 10, -10)
 butt:SetPoint("RIGHT", -2, 0)
 buttons[1] = butt
 
 local anchor = butt
 for i=2,NUM_BUTTONS do
-  local butt = ns.NewCraftButton(ns.panel)
+  local butt = ns.CreateCraftButton(ns.panel)
   butt:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -7)
   butt:SetPoint("RIGHT", anchor)
   anchor = butt
@@ -89,3 +89,8 @@ ns.panel:SetScript("OnMouseWheel", function(self, value)
   if offset < 0 then offset = 0 end
   Refresh()
 end)
+
+
+for i,v in pairs(ns) do
+  if i:match("^Create") then ns[i] = nil end
+end
