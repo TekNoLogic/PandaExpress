@@ -26,26 +26,16 @@ local function ColorNum(num)
 end
 
 
-local function CreatesScroll(recipe_id)
-  return not not ns.vellums[recipe_id]
-end
-
-
-local function GetResultItemLink(recipe_id)
-  if CreatesScroll(recipe_id) then
-    local _, link = GetItemInfo(ns.vellums[recipe_id])
-    return link
-  end
-
-  return C_TradeSkillUI.GetRecipeItemLink(recipe_id)
-end
-
-
+local children = {}
 local function SetRecipe(self, recipe)
   if not recipe then
     self:Hide()
     return
   end
+
+  local recipe_id = recipe.recipeID
+
+  for kid in pairs(children[self]) do kid:SetValue(recipe_id) end
 
   self.recipe_id = recipe.recipeID
   self.recipe = recipe
@@ -53,8 +43,8 @@ local function SetRecipe(self, recipe)
   self.name:SetText(recipe.name)
   self.icon:SetTexture(recipe.icon)
 
-  local link = GetResultItemLink(recipe.recipeID)
-  if link and CreatesScroll(recipe.recipeID) then
+  local link = ns.GetResultItemLink(recipe_id)
+  if link and ns.CreatesScroll(recipe_id) then
     local name, _, _, _, _, _, _, _, _, texture = GetItemInfo(link)
     self.name:SetText(name:gsub("^Enchant ", ""))
     self.icon:SetTexture(texture)
@@ -89,14 +79,6 @@ local function SetRecipe(self, recipe)
     reagent_price = BATTLENET_FONT_COLOR_CODE.."BoP|r "..reagent_price
   end
   self.cost:SetText(reagent_price)
-
-  if link then
-    local ah = GetAuctionBuyout and GetAuctionBuyout(link)
-    local ah_price = ah and ns.GS(ah) or UNKNOWN
-    self.ah:SetText(ah_price)
-  else
-    self.ah:SetText()
-  end
 
   self:Show()
 end
@@ -139,6 +121,9 @@ function ns.NewCraftButton(parent)
   local butt = CreateFrame("CheckButton", nil, parent, "SecureActionButtonTemplate")
   butt:SetHeight(48)
 
+  local kids = {}
+  children[butt] = kids
+
   butt.item = CreateFrame("Frame", nil, butt)
   butt.item:SetPoint("TOPLEFT")
   butt.item:SetSize(48, 48)
@@ -172,9 +157,10 @@ function ns.NewCraftButton(parent)
   butt.cost = butt:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
   butt.cost:SetPoint("TOPRIGHT", butt.costlabel, "TOPLEFT", -5, 0)
 
-  butt.ah = butt:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-  butt.ah:SetPoint("TOP", butt.auctionlabel)
-  butt.ah:SetPoint("RIGHT", butt.cost)
+  local ah = ns.CreateAuctionPrice(butt)
+  ah:SetPoint("TOP", butt.auctionlabel)
+  ah:SetPoint("RIGHT", butt.cost)
+  kids[ah] = true
 
   butt.SetRecipe = SetRecipe
   butt:SetScript("PreClick", PreClick)
