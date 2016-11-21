@@ -30,5 +30,4 @@ services\get_result_item_link.lua
 services\learned_recipes.lua
 services\num_craftable.lua
 
-Button.lua
 Panel.lua
