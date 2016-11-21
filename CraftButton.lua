@@ -2,21 +2,6 @@
 local myname, ns = ...
 
 
-local children = {}
-local function SetRecipe(self, recipe)
-  if not recipe then return self:Hide() end
-
-  local recipe_id = recipe.recipeID
-  recipe_ids[self] = recipe_id
-
-  ns.SendMessage("_RECIPE_DATA_RECEIVED", recipe_id, recipe)
-
-  for kid in pairs(children[self]) do kid:SetValue(recipe_id) end
-
-  self:Show()
-end
-
-
 local recipe_ids = {}
 local function PreClick(self, button)
   if InCombatLockdown() then return end
@@ -30,6 +15,21 @@ local function PostClick(self, button)
   if InCombatLockdown() then return end
   self:SetAttribute("type", nil)
   self:SetAttribute("macrotext", nil)
+end
+
+
+local children = {}
+local function SetRecipe(self, recipe)
+  if not recipe then return self:Hide() end
+
+  local recipe_id = recipe.recipeID
+  recipe_ids[self] = recipe_id
+
+  ns.SendMessage("_RECIPE_DATA_RECEIVED", recipe_id, recipe)
+
+  for kid in pairs(children[self]) do kid:SetValue(recipe_id) end
+
+  self:Show()
 end
 
 
