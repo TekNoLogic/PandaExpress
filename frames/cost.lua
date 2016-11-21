@@ -20,8 +20,10 @@ end
 
 
 local function GetCost(recipe_id)
+  if not GetReagentCost then return UNKNOWN end
+
   local key = "recipe:".. recipe_id
-  local cost, incomplete = GetReagentCost and GetReagentCost(key)
+  local cost, incomplete = GetReagentCost(key)
   if not cost then return UNKNOWN end
 
   return (incomplete and "~" or "").. ns.GS(cost)
