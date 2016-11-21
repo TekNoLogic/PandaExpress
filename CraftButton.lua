@@ -71,20 +71,20 @@ function ns.CreateCraftButton(parent)
   stock:SetPoint("TOPLEFT", craftable, "BOTTOMLEFT", 0, -4)
   kids[stock] = true
 
-  butt.costlabel = butt:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-  butt.costlabel:SetPoint("TOP", craftable)
-  butt.costlabel:SetPoint("RIGHT", butt, "RIGHT", -5, 0)
-  butt.costlabel:SetText("Cost")
+  local costlabel = butt:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+  costlabel:SetPoint("TOP", craftable)
+  costlabel:SetPoint("RIGHT", butt, "RIGHT", -5, 0)
+  costlabel:SetText("Cost")
 
-  butt.auctionlabel = butt:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-  butt.auctionlabel:SetPoint("TOPRIGHT", butt.costlabel, "BOTTOMRIGHT", 0, -4)
-  butt.auctionlabel:SetText("AH")
+  local auctionlabel = butt:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+  auctionlabel:SetPoint("TOPRIGHT", costlabel, "BOTTOMRIGHT", 0, -4)
+  auctionlabel:SetText("AH")
 
   local cost = ns.CreateCost(butt)
-  cost:SetPoint("TOPRIGHT", butt.costlabel, "TOPLEFT", -5, 0)
+  cost:SetPoint("TOPRIGHT", costlabel, "TOPLEFT", -5, 0)
 
   local ah = ns.CreateAuctionPrice(butt)
-  ah:SetPoint("TOP", butt.auctionlabel)
+  ah:SetPoint("TOP", auctionlabel)
   ah:SetPoint("RIGHT", cost)
   kids[ah] = true
 
