@@ -9,9 +9,11 @@ local function SetValue(self, recipe_id)
   local link = ns.GetResultItemLink(recipe_id)
   if not link then return self:SetText() end
 
-  local ah = GetAuctionBuyout and GetAuctionBuyout(link)
-  local ah_price = ah and ns.GS(ah) or UNKNOWN
-  self:SetText(ah_price)
+  local price = GetAuctionBuyout and GetAuctionBuyout(link)
+  if not price then return self:SetText(UNKNOWN) end
+
+  local num = C_TradeSkillUI.GetRecipeNumItemsProduced(recipe_id)
+  self:SetText(ns.GS(price*num))
 end
 
 
