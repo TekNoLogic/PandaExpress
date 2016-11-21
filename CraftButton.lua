@@ -2,30 +2,6 @@
 local myname, ns = ...
 
 
-local UNKNOWN = GRAY_FONT_COLOR_CODE.. "???"
-
-
-local server = GetRealmName().." "..UnitFactionGroup("player")
-local function GetNumAuctions(link)
-  local id = ns.ids[link]
-  local count = 0
-
-  if id and ForSaleByOwnerDB then
-    for char,vals in pairs(ForSaleByOwnerDB[server]) do
-      count = count + (vals[id] or 0)
-    end
-  end
-
-  return count
-end
-
-
-local function ColorNum(num)
-  local color = (num > 0) and HIGHLIGHT_FONT_COLOR_CODE or GRAY_FONT_COLOR_CODE
-  return color.. num.. "|r"
-end
-
-
 local children = {}
 local function SetRecipe(self, recipe)
   if not recipe then
@@ -34,13 +10,12 @@ local function SetRecipe(self, recipe)
   end
 
   local recipe_id = recipe.recipeID
+  ns.SetRecipeLearned(recipe_id, recipe.learned)
 
   for kid in pairs(children[self]) do kid:SetValue(recipe_id) end
 
   self.recipe_id = recipe.recipeID
   self.recipe = recipe
-
-  local link = ns.GetResultItemLink(recipe_id)
 
   if recipe.learned then
     local cooldown, _, num, max = C_TradeSkillUI.GetRecipeCooldown(recipe.recipeID)
@@ -48,28 +23,11 @@ local function SetRecipe(self, recipe)
     if cooldown or ((max or 0) > 0 and num == 0) then
       self.craftable:SetText(RED_FONT_COLOR_CODE.. "On cooldown")
     else
-      self.craftable:SetText("Can craft: ".. ColorNum(recipe.numAvailable))
-    end
-
-    if link then
-      local stock = GetItemCount(link, true) + GetNumAuctions(link)
-      self.stock:SetText("In stock: ".. ColorNum(stock))
-    else
-      self.stock:SetText()
+      self.craftable:SetText("Can craft: ".. ns.ColorNum(recipe.numAvailable))
     end
   else
     self.craftable:SetText()
-    self.stock:SetText()
   end
-
-  local cost, incomplete = GetReagentCost and GetReagentCost("recipe:"..recipe.recipeID)
-  local reagent_price = cost and ns.GS(cost) or UNKNOWN
-  if incomplete then reagent_price = "~"..reagent_price end
-  local id = link and ns.ids[link]
-  if cost and id and HasBoundReagents and HasBoundReagents(id) then
-    reagent_price = BATTLENET_FONT_COLOR_CODE.."BoP|r "..reagent_price
-  end
-  self.cost:SetText(reagent_price)
 
   self:Show()
 end
@@ -122,8 +80,9 @@ function ns.CreateCraftButton(parent)
   butt.craftable = butt:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
   butt.craftable:SetPoint("TOPLEFT", name, "BOTTOMLEFT", 0, -4)
 
-  butt.stock = butt:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
-  butt.stock:SetPoint("TOPLEFT", butt.craftable, "BOTTOMLEFT", 0, -4)
+  local stock = ns.CreateStockCount(butt)
+  stock:SetPoint("TOPLEFT", butt.craftable, "BOTTOMLEFT", 0, -4)
+  kids[stock] = true
 
   butt.costlabel = butt:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
   butt.costlabel:SetPoint("TOP", butt.craftable)
@@ -134,12 +93,12 @@ function ns.CreateCraftButton(parent)
   butt.auctionlabel:SetPoint("TOPRIGHT", butt.costlabel, "BOTTOMRIGHT", 0, -4)
   butt.auctionlabel:SetText("AH")
 
-  butt.cost = butt:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-  butt.cost:SetPoint("TOPRIGHT", butt.costlabel, "TOPLEFT", -5, 0)
+  local cost = ns.CreateCost(butt)
+  cost:SetPoint("TOPRIGHT", butt.costlabel, "TOPLEFT", -5, 0)
 
   local ah = ns.CreateAuctionPrice(butt)
   ah:SetPoint("TOP", butt.auctionlabel)
-  ah:SetPoint("RIGHT", butt.cost)
+  ah:SetPoint("RIGHT", cost)
   kids[ah] = true
 
   butt.SetRecipe = SetRecipe

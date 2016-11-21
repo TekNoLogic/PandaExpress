@@ -15,11 +15,15 @@ externals\memoizing_table.lua
 data\vellums.lua
 
 frames\auction_price.lua
+frames\cost.lua
 frames\crafted_quantity.lua
 frames\item.lua
 frames\name.lua
+frames\stock_count.lua
 
+services\color_number.lua
 services\get_result_item_link.lua
+services\learned_recipes.lua
 
 Button.lua
 CraftButton.lua
