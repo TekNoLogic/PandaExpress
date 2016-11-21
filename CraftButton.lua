@@ -7,35 +7,22 @@ local function SetRecipe(self, recipe)
   if not recipe then return self:Hide() end
 
   local recipe_id = recipe.recipeID
+  recipe_ids[self] = recipe_id
 
   ns.SendMessage("_RECIPE_DATA_RECEIVED", recipe_id, recipe)
 
   for kid in pairs(children[self]) do kid:SetValue(recipe_id) end
 
-  self.recipe_id = recipe.recipeID
-  self.recipe = recipe
-
   self:Show()
 end
 
 
+local recipe_ids = {}
 local function PreClick(self, button)
   if InCombatLockdown() then return end
 
-  if button == "LeftButton" and (self.recipe.numAvailable > 0) then
-    macro = "/run C_TradeSkillUI.CraftRecipe(".. self.recipe_id.. ")"
-    if self.is_enchant then macro = macro.. "\n/use item:38682" end
-
-    self:SetAttribute("type", "macro")
-    self:SetAttribute("macrotext", macro)
-
-  elseif button == "RightButton" or (self.recipe.numAvailable == 0) then
-    macro = "/run "..
-      "TradeSkillFrame.RecipeList:SetSelectedRecipeID(".. self.recipe_id.. ") "..
-      "TradeSkillFrame.RecipeList:ForceRecipeIntoView(".. self.recipe_id.. ")"
-    self:SetAttribute("type", "macro")
-    self:SetAttribute("macrotext", macro)
-  end
+  self:SetAttribute("type", "macro")
+  self:SetAttribute("macrotext", ns.GenerateMacro(button, recipe_ids[self]))
 end
 
 

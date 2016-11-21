@@ -24,8 +24,10 @@ frames\num_craftable.lua
 frames\stock_count.lua
 
 services\color_number.lua
+services\generate_macro.lua
 services\get_result_item_link.lua
 services\learned_recipes.lua
+services\num_craftable.lua
 
 Button.lua
 CraftButton.lua
