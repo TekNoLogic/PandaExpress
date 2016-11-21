@@ -4,30 +4,16 @@ local myname, ns = ...
 
 local children = {}
 local function SetRecipe(self, recipe)
-  if not recipe then
-    self:Hide()
-    return
-  end
+  if not recipe then return self:Hide() end
 
   local recipe_id = recipe.recipeID
-  ns.SetRecipeLearned(recipe_id, recipe.learned)
+
+  ns.SendMessage("_RECIPE_DATA_RECEIVED", recipe_id, recipe)
 
   for kid in pairs(children[self]) do kid:SetValue(recipe_id) end
 
   self.recipe_id = recipe.recipeID
   self.recipe = recipe
-
-  if recipe.learned then
-    local cooldown, _, num, max = C_TradeSkillUI.GetRecipeCooldown(recipe.recipeID)
-
-    if cooldown or ((max or 0) > 0 and num == 0) then
-      self.craftable:SetText(RED_FONT_COLOR_CODE.. "On cooldown")
-    else
-      self.craftable:SetText("Can craft: ".. ns.ColorNum(recipe.numAvailable))
-    end
-  else
-    self.craftable:SetText()
-  end
 
   self:Show()
 end
@@ -77,15 +63,16 @@ function ns.CreateCraftButton(parent)
   name:SetPoint("RIGHT", butt, -5, 0)
   kids[name] = true
 
-  butt.craftable = butt:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
-  butt.craftable:SetPoint("TOPLEFT", name, "BOTTOMLEFT", 0, -4)
+  local craftable = CreateNumCraftable(butt)
+  craftable:SetPoint("TOPLEFT", name, "BOTTOMLEFT", 0, -4)
+  kids[craftable] = true
 
   local stock = ns.CreateStockCount(butt)
-  stock:SetPoint("TOPLEFT", butt.craftable, "BOTTOMLEFT", 0, -4)
+  stock:SetPoint("TOPLEFT", craftable, "BOTTOMLEFT", 0, -4)
   kids[stock] = true
 
   butt.costlabel = butt:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-  butt.costlabel:SetPoint("TOP", butt.craftable)
+  butt.costlabel:SetPoint("TOP", craftable)
   butt.costlabel:SetPoint("RIGHT", butt, "RIGHT", -5, 0)
   butt.costlabel:SetText("Cost")
 

@@ -18,7 +18,7 @@ end
 
 
 local function GetText(recipe_id)
-  if not ns.GetRecipeLearned(recipe_id) then return end
+  if not ns.IsRecipeLearned(recipe_id) then return end
 
   local link = ns.GetResultItemLink(recipe_id)
   if not link then return end

@@ -2,12 +2,15 @@
 local myname, ns = ...
 
 
-local learned_recipes = {}
-function ns.GetRecipeLearned(recipe_id)
-  return learned_recipes[recipe_id]
+local learned = {}
+local function OnDataReceived(self, event, recipe_id, data)
+  learned[recipe_id] = data.learned
 end
 
 
-function ns.SetRecipeLearned(recipe_id, learned)
-  learned_recipes[recipe_id] = learned
+function ns.IsRecipeLearned(recipe_id)
+  return learned[recipe_id]
 end
+
+
+ns.RegisterCallback("_RECIPE_DATA_RECEIVED", OnDataReceived)

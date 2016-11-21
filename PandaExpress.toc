@@ -8,6 +8,7 @@
 ## LoadOnDemand: 1
 ## LoadWith: Blizzard_TradeSkillUI
 
+externals\events.lua
 externals\gsc.lua
 externals\itemid.lua
 externals\memoizing_table.lua
@@ -19,6 +20,7 @@ frames\cost.lua
 frames\crafted_quantity.lua
 frames\item.lua
 frames\name.lua
+frames\num_craftable.lua
 frames\stock_count.lua
 
 services\color_number.lua
