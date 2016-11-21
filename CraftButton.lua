@@ -50,7 +50,7 @@ function ns.CreateCraftButton(parent)
   name:SetPoint("RIGHT", butt, -5, 0)
   kids[name] = true
 
-  local craftable = CreateNumCraftable(butt)
+  local craftable = ns.CreateNumCraftable(butt)
   craftable:SetPoint("TOPLEFT", name, "BOTTOMLEFT", 0, -4)
   kids[craftable] = true
 
@@ -69,6 +69,7 @@ function ns.CreateCraftButton(parent)
 
   local cost = ns.CreateCost(butt)
   cost:SetPoint("TOPRIGHT", costlabel, "TOPLEFT", -5, 0)
+  kids[cost] = true
 
   local ah = ns.CreateAuctionPrice(butt)
   ah:SetPoint("TOP", auctionlabel)
