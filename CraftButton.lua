@@ -41,16 +41,13 @@ local function SetRecipe(self, recipe)
   self.recipe = recipe
 
   self.name:SetText(recipe.name)
-  self.icon:SetTexture(recipe.icon)
 
   local link = ns.GetResultItemLink(recipe_id)
   if link and ns.CanUseVellum(recipe_id) then
-    local name, _, _, _, _, _, _, _, _, texture = GetItemInfo(link)
+    local name = GetItemInfo(link)
     self.name:SetText(name:gsub("^Enchant ", ""))
-    self.icon:SetTexture(texture)
   end
 
-  self.item.link = link
   if recipe.learned then
     local cooldown, _, num, max = C_TradeSkillUI.GetRecipeCooldown(recipe.recipeID)
 
@@ -111,12 +108,6 @@ local function PostClick(self, button)
 end
 
 
-local function OnEnter(self)
-  GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT", 0, 48)
-  GameTooltip:SetHyperlink(self.link)
-end
-
-
 function ns.CreateCraftButton(parent)
   local butt = CreateFrame("CheckButton", nil, parent, "SecureActionButtonTemplate")
   butt:SetHeight(48)
@@ -124,21 +115,13 @@ function ns.CreateCraftButton(parent)
   local kids = {}
   children[butt] = kids
 
-  butt.item = CreateFrame("Frame", nil, butt)
-  butt.item:SetPoint("TOPLEFT")
-  butt.item:SetSize(48, 48)
-  butt.item:SetScript("OnEnter", OnEnter)
-  butt.item:SetScript("OnLeave", GameTooltip_Hide)
-
-  butt.icon = butt.item:CreateTexture(nil, "ARTWORK")
-  butt.icon:SetAllPoints()
-
-  local qty = ns.CreateCraftedQty(butt.item)
-  qty:SetPoint("BOTTOMRIGHT", -3, 3)
-  kids[qty] = true
+  local item = ns.CreateItem(butt)
+  item:SetPoint("TOPLEFT")
+  item:SetSize(48, 48)
+  kids[item] = true
 
   butt.name = butt:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-  butt.name:SetPoint("TOPLEFT", butt.item, "TOPRIGHT", 5, 0)
+  butt.name:SetPoint("TOPLEFT", item, "TOPRIGHT", 5, 0)
   butt.name:SetPoint("RIGHT", butt, -5, 0)
   butt.name:SetJustifyH("LEFT")
   butt.name:SetWordWrap(false)

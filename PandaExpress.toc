@@ -16,7 +16,9 @@ data\vellums.lua
 
 frames\auction_price.lua
 frames\crafted_quantity.lua
+frames\item.lua
 
+services\get_recipe_texture.lua
 services\get_result_item_link.lua
 
 Button.lua
