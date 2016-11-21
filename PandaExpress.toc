@@ -17,6 +17,7 @@ data\vellums.lua
 frames\auction_price.lua
 frames\crafted_quantity.lua
 frames\item.lua
+frames\name.lua
 
 services\get_result_item_link.lua
 

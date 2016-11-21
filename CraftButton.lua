@@ -40,13 +40,7 @@ local function SetRecipe(self, recipe)
   self.recipe_id = recipe.recipeID
   self.recipe = recipe
 
-  self.name:SetText(recipe.name)
-
   local link = ns.GetResultItemLink(recipe_id)
-  if link and ns.CanUseVellum(recipe_id) then
-    local name = GetItemInfo(link)
-    self.name:SetText(name:gsub("^Enchant ", ""))
-  end
 
   if recipe.learned then
     local cooldown, _, num, max = C_TradeSkillUI.GetRecipeCooldown(recipe.recipeID)
@@ -120,14 +114,13 @@ function ns.CreateCraftButton(parent)
   item:SetSize(48, 48)
   kids[item] = true
 
-  butt.name = butt:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-  butt.name:SetPoint("TOPLEFT", item, "TOPRIGHT", 5, 0)
-  butt.name:SetPoint("RIGHT", butt, -5, 0)
-  butt.name:SetJustifyH("LEFT")
-  butt.name:SetWordWrap(false)
+  local name = ns.CreateName(butt)
+  name:SetPoint("TOPLEFT", item, "TOPRIGHT", 5, 0)
+  name:SetPoint("RIGHT", butt, -5, 0)
+  kids[name] = true
 
   butt.craftable = butt:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
-  butt.craftable:SetPoint("TOPLEFT", butt.name, "BOTTOMLEFT", 0, -4)
+  butt.craftable:SetPoint("TOPLEFT", name, "BOTTOMLEFT", 0, -4)
 
   butt.stock = butt:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
   butt.stock:SetPoint("TOPLEFT", butt.craftable, "BOTTOMLEFT", 0, -4)
