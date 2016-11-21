@@ -133,6 +133,10 @@ function ns.NewCraftButton(parent)
   butt.icon = butt.item:CreateTexture(nil, "ARTWORK")
   butt.icon:SetAllPoints()
 
+  local qty = ns.CreateCraftedQty(butt.item)
+  qty:SetPoint("BOTTOMRIGHT", -3, 3)
+  kids[qty] = true
+
   butt.name = butt:CreateFontString(nil, "ARTWORK", "GameFontNormal")
   butt.name:SetPoint("TOPLEFT", butt.item, "TOPRIGHT", 5, 0)
   butt.name:SetPoint("RIGHT", butt, -5, 0)

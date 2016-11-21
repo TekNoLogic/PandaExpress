@@ -15,6 +15,7 @@ externals\memoizing_table.lua
 data\vellums.lua
 
 frames\auction_price.lua
+frames\crafted_quantity.lua
 
 services\get_result_item_link.lua
 
