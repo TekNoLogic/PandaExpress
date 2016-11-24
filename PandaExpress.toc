@@ -22,6 +22,8 @@ frames\crafted_quantity.lua
 frames\item.lua
 frames\name.lua
 frames\num_craftable.lua
+frames\panel.lua
+frames\scroll_frame.lua
 frames\stock_count.lua
 
 services\color_number.lua
@@ -31,4 +33,4 @@ services\get_result_item_link.lua
 services\learned_recipes.lua
 services\num_craftable.lua
 
-Panel.lua
+init.lua
