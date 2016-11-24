@@ -14,7 +14,7 @@ local BG_COLOR = TOOLTIP_DEFAULT_BACKGROUND_COLOR
 local COLOR = TOOLTIP_DEFAULT_COLOR
 
 
-local function CreatePanel()
+function ns.CreatePanel()
   local panel = CreateFrame("Frame", nil, TradeSkillFrame)
   panel:SetWidth(250)
   panel:SetPoint("TOPLEFT", TradeSkillFrame, "TOPRIGHT", -8, -21)
@@ -30,6 +30,3 @@ local function CreatePanel()
   scroll_frame:SetPoint("TOPLEFT", 10, -10)
   scroll_frame:SetPoint("RIGHT", -2, 0)
 end
-
-
-ns.RegisterCallback("_THIS_ADDON_LOADED", CreatePanel)

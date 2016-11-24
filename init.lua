@@ -9,4 +9,5 @@ local function OnLogin()
 end
 
 
+ns.RegisterCallback("_THIS_ADDON_LOADED", ns.CreatePanel)
 ns.RegisterCallback("PLAYER_LOGIN", OnLogin)
