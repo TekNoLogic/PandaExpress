@@ -15,16 +15,16 @@ externals\memoizing_table.lua
 
 data\vellums.lua
 
-frames\auction_price.lua
-frames\cost.lua
 frames\craft_button.lua
-frames\crafted_quantity.lua
-frames\item.lua
-frames\name.lua
-frames\num_craftable.lua
+frames\craft_button\auction_price.lua
+frames\craft_button\cost.lua
+frames\craft_button\crafted_quantity.lua
+frames\craft_button\item.lua
+frames\craft_button\name.lua
+frames\craft_button\num_craftable.lua
+frames\craft_button\stock_count.lua
 frames\panel.lua
 frames\scroll_frame.lua
-frames\stock_count.lua
 
 services\color_number.lua
 services\generate_macro.lua
