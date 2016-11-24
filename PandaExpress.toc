@@ -12,6 +12,7 @@ externals\events.lua
 externals\gsc.lua
 externals\itemid.lua
 externals\memoizing_table.lua
+externals\ui-scrollbar.lua
 
 data\vellums.lua
 
