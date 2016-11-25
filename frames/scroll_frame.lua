@@ -8,50 +8,42 @@ local NUM_BUTTONS = 8
 local buttons = {}
 local dirty
 local offset = 0
-local recipes = {}
-local function RebuildList()
-  wipe(recipes)
-
-  for i,recipe in ipairs(TradeSkillFrame.RecipeList.dataList) do
-    if recipe.recipeID then
-      table.insert(recipes, recipe)
-    end
-  end
-end
 
 
 local function Refresh()
-  for i,butt in pairs(buttons) do butt:SetRecipe(recipes[i+offset]) end
+  for i,butt in pairs(buttons) do butt:SetRecipe(ns.GetRecipe(i+offset)) end
 end
 
 
-local function OnMouseWheel(self, value)
-  local max = #recipes - NUM_BUTTONS
-  offset = offset - value * NUM_BUTTONS / 2
-  if offset > max then offset = max end
-  if offset < 0 then offset = 0 end
-  Refresh()
+local dirty
+local function UpdateScrollbar(self)
+	if dirty then self:SetValue(0) end
+	dirty = false
+
+	self:SetMinMaxValues(0, math.max(0, ns.GetNumRecipes() - NUM_BUTTONS))
 end
 
 
-local function OnRebuildDataList()
-  if dirty then
-    offset = 0
-    dirty = false
-  end
-  RebuildList()
-  Refresh()
+local function ResetScrollbar(self)
+	dirty = true
 end
 
 
-local function OnRefreshDisplay()
+local function OnDetailsRefresh()
   -- Tiny delay to allow tekReagentCost to scan all the recipes
   C_Timer.After(.01, Refresh)
 end
 
 
-local function OnShow()
-  dirty = true
+local function OnRecipeListUpdated(self)
+  UpdateScrollbar(self)
+  Refresh()
+end
+
+
+local function OnValueChanged(self, value)
+  offset = value
+  Refresh()
 end
 
 
@@ -61,7 +53,7 @@ function ns.CreateScrollFrame(parent)
   for i=1,NUM_BUTTONS do
     local butt = ns.CreateCraftButton(frame)
     butt:SetPoint("LEFT")
-    butt:SetPoint("RIGHT")
+    butt:SetPoint("RIGHT", -24, 0)
     if i == 1 then
       butt:SetPoint("TOP")
     else
@@ -71,13 +63,22 @@ function ns.CreateScrollFrame(parent)
     buttons[i] = butt
   end
 
-  frame:EnableMouse(true)
-  frame:EnableMouseWheel(true)
-  frame:SetScript("OnMouseWheel", OnMouseWheel)
-  frame:SetScript("OnShow", OnShow)
 
-  hooksecurefunc(TradeSkillFrame.RecipeList, "RebuildDataList", OnRebuildDataList)
-  hooksecurefunc(TradeSkillFrame.DetailsFrame, "RefreshDisplay", OnRefreshDisplay)
+	local scrollbar = ns.CreateScrollBar(frame)
+	scrollbar:SetPoint("TOP", 0, -13)
+	scrollbar:SetPoint("BOTTOM", 0, 11)
+	scrollbar:SetPoint("RIGHT", -5, 0)
+	scrollbar:SetValueStep(NUM_BUTTONS/2)
+	scrollbar:SetStepsPerPage(2)
+	scrollbar:AttachOnMouseWheel(frame)
+
+	scrollbar.OnValueChanged = OnValueChanged
+
+
+  frame:SetScript("OnShow", ResetScrollbar)
+
+  ns.RegisterCallback("_TRADESKILL_DETAILS_REFRESH", OnDetailsRefresh)
+  ns.RegisterCallback(scrollbar, "_RECIPE_LIST_UPDATED", OnRecipeListUpdated)
 
   return frame
 end

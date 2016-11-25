@@ -26,6 +26,8 @@ function ns.CreatePanel()
   panel:SetBackdropBorderColor(COLOR.r, COLOR.g, COLOR.b)
   panel:SetBackdropColor(BG_COLOR.r, BG_COLOR.g, BG_COLOR.b)
 
+  panel:EnableMouse(true)
+
   local scroll_frame = ns.CreateScrollFrame(panel)
   scroll_frame:SetPoint("TOPLEFT", 10, -10)
   scroll_frame:SetPoint("RIGHT", -2, 0)

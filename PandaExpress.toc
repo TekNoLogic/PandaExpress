@@ -16,6 +16,9 @@ externals\ui-scrollbar.lua
 
 data\vellums.lua
 
+events\tradeskill_details_refresh.lua
+events\tradeskill_recipe_list_rebuilt.lua
+
 frames\craft_button.lua
 frames\craft_button\auction_price.lua
 frames\craft_button\cost.lua
@@ -33,5 +36,6 @@ services\get_num_produced.lua
 services\get_result_item_link.lua
 services\learned_recipes.lua
 services\num_craftable.lua
+services\recipe_list.lua
 
 init.lua
